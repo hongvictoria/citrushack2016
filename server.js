@@ -3,6 +3,8 @@ var app = express();
 
 var mustacheExpress = require('mustache-express');
 
+app.use(express.static('public'));
+
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress());
 
