@@ -7,7 +7,7 @@ var mustacheExpress = require('mustache-express');
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
 var mustacheExpress = require('mustache-express');
 
 var auth = require('./auth');
@@ -74,10 +74,18 @@ app.post('/register', function (req, res) {
 		res.render('register', {error: "Must be 10 digits"});
 	} 
 	else {res.json(req.body);}
+
+	var psw = req.body.psw;
+
+	var sha512 = require('sha512');
+	var key = "super secret";
+	var hasher = sha512.hmac(key);
+
+	var hash = hasher.finalize('hello man');
+
+	var hashhash = hash.toString('hex');
+
 });
-
-	var pws = req.body.number;
-
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
