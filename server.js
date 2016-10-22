@@ -30,6 +30,11 @@ app.get('/register', function (req, res) {
 	res.render('register', {});
 });
 
+app.get('/week', function (req, res) {
+  res.render('week',{});
+  // res.send('Hello World!');
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
