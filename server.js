@@ -35,8 +35,24 @@ app.get('/register', function (req, res) {
 
 app.post('/register', function (req, res) {
 	console.log(req.body);
-	res.json(req.body);
+
+	var fName  = req.body.fName;
+
+	var lName = req.body.lName;
+
+	var email = req.body.email;
+
+	var number = req.body.number;
+	number = number.replace(/\D/g,'');
+
+	if (number.length != 10) {
+		res.render('register', {error: "Must be 10 digits"});
+	} 
+	else {res.json(req.body);}
 });
+
+	var pws = req.body.number;
+
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
