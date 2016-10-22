@@ -3,6 +3,8 @@ var app = express();
 
 var mustacheExpress = require('mustache-express');
 
+app.use(express.static('public'));
+
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress());
 
@@ -11,6 +13,11 @@ app.set('views', __dirname + '/views');
 
 app.get('/', function (req, res) {
   res.render('test',{});
+  // res.send('Hello World!');
+});
+
+app.get('/month', function (req, res) {
+  res.render('month',{});
   // res.send('Hello World!');
 });
 
