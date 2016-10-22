@@ -34,12 +34,12 @@ button {
     border-radius: 12px;
 }
 
-/* Add padding to containers */
+/* Add padding to containers
 .container {
     padding: 16px;
     width: 300px;
     text-align: left;
-}
+}*/
 
 </style>
 </head>
@@ -49,15 +49,22 @@ button {
   <div class="container">
     <div class="form-group">
 
-    <label>Email</label>
-    <br><input class = "form-control" placeholder="Enter Email" name="email" required/>
+    <div class="row" >
+  		<div class="col-md-4 col-md-offset-2">
+    		<label>email</label>
+    		<input class = "form-control" placeholder="Enter Email" name="email" required/>
+  		</div>
+  		<div class="col-md-4">
+  			<label>Password</label> 	
+    		<input class = "form-control" placeholder="Enter Password" name="psw" required>
+  		</div>
+  	</div>
 
-    <br><label>Password</label>
-    <br><input class = "form-control" placeholder="Enter Password" name="psw" required>
-
-    <br><button>Login</button>
-
-    <br><button onclick="window.location.href='/register/'">Register</button>
+  	<div class="row">
+  		<div class="col-md-4">
+  			<button>Login</button>
+    		<button onclick="window.location.href='/register/'">Register</button>
+    	</div>
     </div>
   </div>
 </form>
