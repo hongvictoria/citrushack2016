@@ -1,9 +1,12 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser')
 
 var mustacheExpress = require('mustache-express');
 
 app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress());
@@ -28,6 +31,11 @@ app.get('/login', function (req, res) {
 
 app.get('/register', function (req, res) {
 	res.render('register', {});
+});
+
+app.post('/register', function (req, res) {
+	console.log(req.body);
+	res.json(req.body);
 });
 
 app.listen(3000, function () {
