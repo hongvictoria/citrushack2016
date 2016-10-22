@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/hongvictoria/citrushack2016#readme",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "mustache-express": "^1.2.2"
   }
 }
