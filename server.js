@@ -3,6 +3,8 @@ var app = express();
 
 var mustacheExpress = require('mustache-express');
 
+var dateFunction = require ("./date");
+
 app.use(express.static('public'));
 
 // Register '.mustache' extension with The Mustache Express
@@ -17,7 +19,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/month', function (req, res) {
-  res.render('month',{});
+  res.render('month',{month:dateFunction()});
   // res.send('Hello World!');
 });
 
