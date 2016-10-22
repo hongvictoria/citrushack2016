@@ -7,7 +7,7 @@ var mustacheExpress = require('mustache-express');
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
 var mustacheExpress = require('mustache-express');
 
 var auth = require('./auth');
@@ -60,7 +60,31 @@ app.get('/register', function (req, res) {
 
 app.post('/register', function (req, res) {
 	console.log(req.body);
-	res.json(req.body);
+
+	var fName  = req.body.fName;
+
+	var lName = req.body.lName;
+
+	var email = req.body.email;
+
+	var number = req.body.number;
+	number = number.replace(/\D/g,'');
+
+	if (number.length != 10) {
+		res.render('register', {error: "Must be 10 digits"});
+	} 
+	else {res.json(req.body);}
+
+	var psw = req.body.psw;
+
+	var sha512 = require('sha512');
+	var key = "super secret";
+	var hasher = sha512.hmac(key);
+
+	var hash = hasher.finalize('hello man');
+
+	var hashhash = hash.toString('hex');
+
 });
 
 app.listen(3000, function () {

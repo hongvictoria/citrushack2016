@@ -73,6 +73,11 @@ button {
         </div>
 
         <div class="col-md-4">
+
+        {{#error}}
+        {{.}}
+        {{/error}}
+        
         	<label>Phone Number - this is the number you will receive sms text messaging reminders</label>
             <input class = "form-control" placeholder="xxx-xxx-xxxx" name="number" required/>
         </div>
@@ -90,3 +95,10 @@ button {
 </form>
 </center>
 </html>
+
+
+
+
+
+
+
