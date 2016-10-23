@@ -14,6 +14,18 @@ var tokenMap = {};
 var scopes = ['https://www.googleapis.com/auth/calendar'];
 
 module.exports = {
+  format: function(events) {
+    var map = {};
+
+    for(var i=0; i<events.length; i++) {
+      var date = new Date(events[i].start.dateTime);
+      var index = date.getDate();
+
+      if (map[index]) {
+        map[index].push();
+      }
+    }
+  },
   generateURL: function() {
     var url = oauth2Client.generateAuthUrl({
       // 'online' (default) or 'offline' (gets refresh_token)

@@ -96,6 +96,8 @@ app.get('/register', function (req, res) {
 app.get('/week', function (req, res) {
   res.render('week',{});
   // res.send('Hello World!');
+});
+
 app.get('/import', function(req, res) {
   res.redirect(google.generateURL());
 });
