@@ -4,6 +4,8 @@ var bodyParser = require('body-parser')
 
 var mustacheExpress = require('mustache-express');
 
+var month = require ("./date");
+
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -56,8 +58,10 @@ app.get('/callback', function(req, res) {
 });
 
 app.get('/month', function (req, res) {
-  res.render('month',{});
-  // res.send('Hello World!');
+	//var month = ('calendar').fullcalendar(getDate());
+	//res.render(month);
+ res.render('month',{month:month.getMonth(3, 2012), year: 2012,name: month.getNameMonth(3)});
+  //res.send('Hello World!');
 });
 
 app.get('/login', function (req, res) {
@@ -89,6 +93,9 @@ app.get('/register', function (req, res) {
 	res.render('register', {});
 });
 
+app.get('/week', function (req, res) {
+  res.render('week',{});
+  // res.send('Hello World!');
 app.get('/import', function(req, res) {
   res.redirect(google.generateURL());
 });
