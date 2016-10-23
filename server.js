@@ -59,10 +59,10 @@ app.get('/callback', function(req, res) {
 });
 
 app.get('/month', function (req, res) {
-	var month = ('calendar').fullcalendar(getDate());
-	res.render(month);
- // res.render('month',{month:month.getMonth(3, 2012), year: 2012,name: month.getNameMonth(3)});
-  // res.send('Hello World!');
+	//var month = ('calendar').fullcalendar(getDate());
+	//res.render(month);
+ res.render('month',{month:month.getMonth(3, 2012), year: 2012,name: month.getNameMonth(3)});
+  //res.send('Hello World!');
 });
 
 app.get('/login', function (req, res) {
