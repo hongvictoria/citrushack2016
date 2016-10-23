@@ -5,5 +5,5 @@ var key = "super secret";
 var hasher = sha512.hmac(key);
 
 module.exports = function(pw) {
-  return hasher.finalize(psw).toString('hex');
+  return hasher.finalize(pw).toString('hex');
 }
