@@ -12,6 +12,8 @@ var mustacheExpress = require('mustache-express');
 
 var auth = require('./auth');
 var google = require('./google');
+var mysql = require('./mysql');
+var hash = require('./hash');
 
 app.use(cookieParser());
 app.use(auth.auth);
@@ -41,6 +43,16 @@ app.get('/callback', function(req, res) {
   }
 
   res.cookie('token', req.query.code);
+  var email = req.cookies.email;
+
+  if (! email) {
+    return res.send('error, no email found');
+  }
+
+  mysql.updateToken(email, req.query.code);
+  // auth request
+
+
   res.send(req.query);
 });
 
@@ -54,16 +66,40 @@ app.get('/login', function (req, res) {
   // res.send('Hello World!');
 });
 
+app.post('/login', function(req, res) {
+  var email = req.body.email || '';
+
+  var hashedPassword = hash(req.body.psw);
+
+  mysql.checkUser(email, hashedPassword)
+  .then(function(response) {
+    // success
+    // set cookie
+    res.cookie('email', email);
+    res.cookie('token', response.token);
+    res.cookie('loggedIn', true);
+    res.render('success');
+  })
+  .catch(function(err) {
+    //error
+    res.send(err);
+  })
+});
+
 app.get('/register', function (req, res) {
 	res.render('register', {});
+});
+
+app.get('/import', function(req, res) {
+  res.redirect(google.generateURL());
 });
 
 app.post('/register', function (req, res) {
 	console.log(req.body);
 
-	var fName  = req.body.fName;
+	var fName  = req.body.fname;
 
-	var lName = req.body.lName;
+	var lName = req.body.lname;
 
 	var email = req.body.email;
 
@@ -72,19 +108,21 @@ app.post('/register', function (req, res) {
 
 	if (number.length != 10) {
 		res.render('register', {error: "Must be 10 digits"});
+    return;
 	} 
-	else {res.json(req.body);}
 
-	var psw = req.body.psw;
+  var hashedPassword = hash(req.body.psw);
 
-	var sha512 = require('sha512');
-	var key = "super secret";
-	var hasher = sha512.hmac(key);
-
-	var hash = hasher.finalize('hello man');
-
-	var hashhash = hash.toString('hex');
-
+  // order ('firstname', 'lastname', 'email@email.com', '1235551234', 'hashed(password)')
+  mysql.saveUser(fName, lName, email, number, hashedPassword)
+  .then(function() {
+    //saved
+    res.render('success');
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.render('register', {error: "uh oh something went wrong"});
+  })
 });
 
 app.listen(3000, function () {
