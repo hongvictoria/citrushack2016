@@ -42,46 +42,65 @@ module.exports = {
   listEvents: function(code) {
     var auth = this.auth;
     return new Promise(function(resolve, reject) {
-      auth(code)
-      .then(function(token) {
+      if (tokenMap[code]) {
 
-        oauth2Client.credentials = token;
+          oauth2Client.credentials = tokenMap[code];
+          var calendar = google.calendar('v3');
+          calendar.events.list({
+            auth: oauth2Client,
+            calendarId: 'primary',
+            timeMin: (new Date()).toISOString(),
+            maxResults: 10,
+            singleEvents: true,
+            orderBy: 'startTime'
+          }, function(err, response) {
+            if (err) {
 
-        var calendar = google.calendar('v3');
-        calendar.events.list({
-          auth: oauth2Client,
-          calendarId: 'primary',
-          timeMin: (new Date()).toISOString(),
-          maxResults: 10,
-          singleEvents: true,
-          orderBy: 'startTime'
-        }, function(err, response) {
-          if (err) {
+              console.log('The API returned an error: ' + err);
+              delete tokenMap[code];
+              reject(err);
+            }
+            var events = response.items;
+            console.log(events);
 
-            console.log('The API returned an error: ' + err);
-            reject(err);
-          }
-          var events = response.items;
-          console.log(events);
-
-          resolve(events);
-          // if (events.length == 0) {
-          //   console.log('No upcoming events found.');
-          // } else {
-          //   console.log('Upcoming 10 events:');
-          //   for (var i = 0; i < events.length; i++) {
-          //     var event = events[i];
-          //     var start = event.start.dateTime || event.start.date;
-          //     console.log('%s - %s', start, event.summary);
-          //   }
-          // }
-        });
+            resolve(events);
+          });
 
 
-      })
-      .catch(function(err) {
-        reject(err);
-      })
+      } else {
+        auth(code)
+        .then(function(token) {
+
+          tokenMap[code] = token;
+
+          oauth2Client.credentials = token;
+
+          var calendar = google.calendar('v3');
+          calendar.events.list({
+            auth: oauth2Client,
+            calendarId: 'primary',
+            timeMin: (new Date()).toISOString(),
+            maxResults: 10,
+            singleEvents: true,
+            orderBy: 'startTime'
+          }, function(err, response) {
+            if (err) {
+
+              console.log('The API returned an error: ' + err);
+              reject(err);
+            }
+            var events = response.items;
+            console.log(events);
+
+            resolve(events);
+          });
+
+
+        })
+        .catch(function(err) {
+          reject(err);
+        })
+      }
       
     });
 
