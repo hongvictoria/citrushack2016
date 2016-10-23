@@ -9,6 +9,8 @@ var oauth2Client = new OAuth2(
   'http://localhost:3000/callback'
 );
 
+var tokenMap = {};
+
 var scopes = ['https://www.googleapis.com/auth/calendar'];
 
 module.exports = {
@@ -21,5 +23,67 @@ module.exports = {
       scope: scopes
     });
     return url;
+  },
+  auth: function(code) {
+    return new Promise(function(resolve, reject) {
+      oauth2Client.getToken(code, function(err, token) {
+        if (err) {
+          reject(err);
+        }
+
+        console.log('---- token:', token);
+        resolve(token);
+        // oauth2Client.credentials = token;
+        // storeToken(token);
+        // callback(oauth2Client);
+      });
+    });
+  },
+  listEvents: function(code) {
+    var auth = this.auth;
+    return new Promise(function(resolve, reject) {
+      auth(code)
+      .then(function(token) {
+
+        oauth2Client.credentials = token;
+
+        var calendar = google.calendar('v3');
+        calendar.events.list({
+          auth: oauth2Client,
+          calendarId: 'primary',
+          timeMin: (new Date()).toISOString(),
+          maxResults: 10,
+          singleEvents: true,
+          orderBy: 'startTime'
+        }, function(err, response) {
+          if (err) {
+
+            console.log('The API returned an error: ' + err);
+            reject(err);
+          }
+          var events = response.items;
+          console.log(events);
+
+          resolve(events);
+          // if (events.length == 0) {
+          //   console.log('No upcoming events found.');
+          // } else {
+          //   console.log('Upcoming 10 events:');
+          //   for (var i = 0; i < events.length; i++) {
+          //     var event = events[i];
+          //     var start = event.start.dateTime || event.start.date;
+          //     console.log('%s - %s', start, event.summary);
+          //   }
+          // }
+        });
+
+
+      })
+      .catch(function(err) {
+        reject(err);
+      })
+      
+    });
+
   }
 }

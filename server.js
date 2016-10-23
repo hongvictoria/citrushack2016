@@ -52,7 +52,6 @@ app.get('/callback', function(req, res) {
   mysql.updateToken(email, req.query.code);
   // auth request
 
-
   res.send(req.query);
 });
 
@@ -124,6 +123,24 @@ app.post('/register', function (req, res) {
     res.render('register', {error: "uh oh something went wrong"});
   })
 });
+
+
+app.get('/test', function(req, res) {
+  res.render('import');
+})
+
+app.get('/test1', function(req, res) {
+  // res.send(req.cookies);
+  google.listEvents(req.cookies.token)
+  .then(function(abc) {
+    console.log("abc", abc);
+    res.json(abc);
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.json(err);
+  })
+})
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
